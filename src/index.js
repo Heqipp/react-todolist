@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 //ReactDOM.render(参数一,参数二)作用是将模板转为HTML语言，并插入指定的DOM节点。参数一：要被渲染的react元素；参数二：插入模板的目标位置
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 reportWebVitals();
 
 //笔记：

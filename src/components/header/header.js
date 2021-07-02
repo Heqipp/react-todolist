@@ -4,6 +4,10 @@ import React, { Component } from 'react'
 import './header.css'
 
 class Header extends Component{
+    constructor(props){
+        super(props)
+        this.todoInput = React.createRef()
+    }
     //回车事件：按下回车后调用父组件的add事件进行todo增加
     enterPress = (event) =>{
         if(event.key === 'Enter'){
@@ -23,12 +27,13 @@ class Header extends Component{
     getInput=()=>{
         this.props.todo.add(this.state.title)
     }
+
     render(){
         return(
             <div className='header'>
                 <div className='header-content'>
                     <div className='header-title'>Todolist</div>
-                    <input className='search' placeholder="添加" type='text' onKeyPress={this.enterPress} onChange={this.clickAdd}/>
+                    <input className='search' placeholder="添加" type='text' onKeyPress={this.enterPress} onChange={this.clickAdd} ref={this.todoInput}/>
                     <button className='add' onClick={this.getInput}>添加</button>
                 </div>
             </div>

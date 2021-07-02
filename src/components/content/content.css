@@ -2,3 +2,30 @@
     width: 600px;
     margin: 0 auto;
 }
+.content ul{
+    list-style: none;
+    position: relative;
+}
+.content ul li{
+    text-align: left;
+}
+.check{
+    position: absolute;
+    left: 15px;
+    width: 15px;
+    height: 15px;
+}
+.delete{
+    position: absolute;
+    top:51px;
+    right: 60px;
+}
+.doing{
+    position: relative;
+    border-bottom: 1px darkgray solid;/*分割线*/
+}
+.finish{
+    position: relative;
+    border-bottom: 1px darkgray solid;/*分割线*/
+
+}
