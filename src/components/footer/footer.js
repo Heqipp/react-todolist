@@ -6,7 +6,7 @@ import './footer.css'
 class Footer extends Component{
     render(){
         return(
-            <div className= 'footer' >一键清空</div>
+            <div className= 'footer' onClick={this.props.todo.clear}>一键清空</div>
         )
     }
 }

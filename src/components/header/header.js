@@ -22,6 +22,7 @@ class Header extends Component{
         this.setState({
             title:event.target.value
         })
+
     }
     //点击‘添加’按钮后，触发：将input值获取到并添加进list（未完成input值清空）
     getInput=()=>{

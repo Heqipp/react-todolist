@@ -11,21 +11,65 @@
 }
 .check{
     position: absolute;
-    left: 15px;
-    width: 15px;
-    height: 15px;
+    left: -35px;
+    top: 0px;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
 }
 .delete{
     position: absolute;
-    top:51px;
-    right: 60px;
+    display: inline-block;
+    top: 0;
+    right: 8px;
+    font-size: 8px;
+
 }
 .doing{
-    position: relative;
-    border-bottom: 1px darkgray solid;/*分割线*/
+
+    font-size: 26px;
+    padding-bottom: 10px;
+
 }
 .finish{
-    position: relative;
-    border-bottom: 1px darkgray solid;/*分割线*/
 
+    font-size: 26px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+}
+.edit{
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    right: 50px;
+    font-size: 8px;
+
+}
+.doing-list{
+    position: relative;
+    height: 30px;
+    padding-left: 10px;
+    line-height: 30px;
+    background: #629A9C;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+}
+.doing-numb{
+    font-size: 20px;
+    padding-left: 10px;
+}
+.finish-list{
+    position: relative;
+    height: 30px;
+    padding-left: 10px;
+    margin-top: 5px;
+    line-height: 30px;
+    background: darkgray;
+    border: none;
+    border-radius: 5px;
+}
+.finish-numb{
+    font-size: 20px;
+    padding-left: 10px;
 }
