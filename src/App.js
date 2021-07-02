@@ -96,27 +96,10 @@ class App extends Component {
 
                        }
                     })
-                    // //让用户输入一个修改后的值
-                    // let val = window.prompt('请输入修改后的值：')
-                    // if(val.trim() === ''){
-                    //     return
-                    // }
-                    // //1.获取list的副本
-                    // let newlist = this.state.todo.list
-                    // newlist.splice(index,1,val)
-                    // // 2.修改state数据
-                    // // console.log(id);
-                    // this.setState({
-                    //     //用这个副本的list去替换掉构造方法中的list
-                    //     list:newlist
-                    // })
-                }
+                },
             }
-
-
         }
     }
-
 
     render(){
         return(
@@ -127,6 +110,30 @@ class App extends Component {
                 <Footer todo={this.state.todo}/>
             </div>
         )
+    }
+    //1.获取本地数据：生命周期函数：在组件加载完成，render() 之后调用
+    componentDidMount(){
+        const str = localStorage.getItem("list") || "[]";
+        //获取本地存储的数据  取不到用“[]”
+        //因为localStorage只能存储字符串，所以获取过来的字符串数据通过JSON.parse()变为对象形式赋值给变量list
+        const locallist = JSON.parse(str);
+        this.setState(preState => {
+            //创建副本
+            let newTodo = preState.todo
+            //将本地数据赋值给副本
+            newTodo.list = locallist
+            return {
+                //副本变真
+                todo: newTodo
+            }
+        })
+    }
+
+    //2.储存：添加数据后会将其储存到本地
+    //componentDidUpdate方法：只要页面的state或者model中的state中定义的变量值发生改变，这个方法就会执行
+    componentDidUpdate(prevProps,prevState){
+        //json.stringfy()将对象、数组转换成字符串
+        localStorage.setItem("list",JSON.stringify(this.state.todo.list))
     }
 }
 
