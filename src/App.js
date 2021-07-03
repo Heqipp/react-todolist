@@ -10,6 +10,8 @@ class App extends Component {
     constructor() {
         super()
         this.state = {
+            dragIndex: '',
+            enterIndex: '',
             todo: {
                 list: [],
                 //1.添加todo事件
@@ -97,6 +99,42 @@ class App extends Component {
                        }
                     })
                 },
+                //6.拖拽
+                dragstart:(index)=>{
+                    console.log('dragstart运行')
+                    //储存被点击节点的index值
+                    this.dragIndex = index;
+                    console.log('被点击的节点的index值：'+this.dragIndex)
+                },
+                dragenter:(e,index)=>{
+                    e.preventDefault();
+                    console.log('dragenter运行')
+                    this.setState(preState=>{
+                        if (this.dragIndex !== index) {
+                            //创建todo数据的副本
+                            let newTodo = preState.todo
+                            //储存被点击的节点的对象数据
+                            const source=newTodo.list[this.dragIndex];
+                            // 避免重复触发目标对象的dragenter事件
+                            if (this.enterIndex !== index) {
+                                newTodo.list.splice(this.dragIndex, 1);
+                                newTodo.list.splice(index, 0,source);
+                                // 排序变化后目标对象的索引变成源对象的索引
+                                this.dragIndex = index;
+                                console.log(source)
+                                return{
+                                    todo:newTodo
+                                }
+                            } else {
+                                this.enterIndex = index;
+                            }
+                        }
+                    })
+
+                },
+                dragover:(e,index)=>{
+                    e.preventDefault();
+                }
             }
         }
     }
@@ -106,7 +144,7 @@ class App extends Component {
             <div className='App'>
                 {/*  父-子传参：使用todo对象把父组件的数据和方法传入子组件*/}
                 <Header todo={this.state.todo}  />
-                <Content todo={this.state.todo}/>
+                <Content todo={this.state.todo} />
                 <Footer todo={this.state.todo}/>
             </div>
         )
