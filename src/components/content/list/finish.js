@@ -14,13 +14,15 @@ class Doing extends Component {
                             return (
                                 <div className='finish-list'
                                      draggable="true"
-                                     onDragEnter={(e)=>this.props.todo.dragenter(e,index)}
-                                     onDragOver={(e)=>this.props.todo.dragover(e,index)}
-                                     onDragStart={(e)=>this.props.todo.dragstart(index)}
+                                     onDragEnter={(e)=>this.props.todo.dragenter(e,item)}
+                                     onDragOver={(e)=>this.props.todo.dragover(e,item)}
+                                     onDragStart={(e)=>this.props.todo.dragstart(item)}
                                 >
                                     <input type='checkbox' className='check'
                                            onClick={() => this.props.todo.finish(item.id)} checked={item.status}/>
                                     <li key={index}>{item.text}</li>
+                                    {/*时间显示*/}
+                                    <span className='time'>{item.id}</span>
                                     <span className='edit' onClick={()=>{this.props.todo.edit(index,item.id,item.status)}}>编辑</span>
                                     <span className='delete' onClick={() => {
                                         this.props.todo.delete(item.id)

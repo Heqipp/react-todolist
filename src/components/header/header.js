@@ -27,6 +27,7 @@ class Header extends Component{
     //点击‘添加’按钮后，触发：将input值获取到并添加进list（未完成input值清空）
     getInput=()=>{
         this.props.todo.add(this.state.title)
+
     }
 
     render(){
@@ -34,7 +35,7 @@ class Header extends Component{
             <div className='header'>
                 <div className='header-content'>
                     <div className='header-title'>Todolist</div>
-                    <input className='search' placeholder="添加" type='text' onKeyPress={this.enterPress} onChange={this.clickAdd} ref={this.todoInput}/>
+                    <input className='search' placeholder="添加" type='text' onKeyPress={this.enterPress} onChange={this.clickAdd} />
                     <button className='add' onClick={this.getInput}>添加</button>
                 </div>
             </div>

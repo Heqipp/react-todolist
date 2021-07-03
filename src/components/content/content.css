@@ -48,6 +48,13 @@
     font-size: 8px;
 
 }
+.time{
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    right: 90px;
+    font-size: 8px;
+}
 .doing-list{
     position: relative;
     height: 30px;
@@ -76,3 +83,4 @@
     font-size: 20px;
     padding-left: 10px;
 }
+

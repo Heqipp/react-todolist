@@ -5,6 +5,7 @@ import './App.css';
 import Header from './components/header/header'
 import Footer from './components/footer/footer'
 import Content from './components/content/content'
+import moment from 'moment';
 
 class App extends Component {
     constructor() {
@@ -22,11 +23,17 @@ class App extends Component {
                         let newTodo = preState.todo
                         //将当前todo列表值复制到空数组中去，并储存在变量list中
                         let list = Object.assign([], newTodo.list)
+                        //获取此时的时间戳
+                        const time=new Date().getTime()
+                        //将时间戳转化为正常时间：调用转化函数
+                        const id=this.timeformat(time)
                         //为list列表添加新值
                         list.push({
                             text: item,
-                            id: new Date().getTime(),
-                            status: false
+                            id: id,//当更新状态时，会改变此时间显示为完成时时间
+                            oldtime:id,//建立时的时间：用来状态变为false时，显示建立时的时间
+                            status: false,
+                            dragnumb:this.state.todo.list.length
                         })
                         //查验新list
                         console.log(list)
@@ -51,15 +58,25 @@ class App extends Component {
                 //3.设置todo为已完成状态
                 finish: (id) => {
                     this.setState(preState => {
-                        console.log(id)
                         let newTodo = preState.todo
                         newTodo.list = newTodo.list.map(item => {
                             if(item.id === id){
                                 item.status = !item.status
+                                //如果此时todo为完成状态，则更新完成时间
+                                if(item.status===true){
+                                    //获取当前时间为完成时的时间戳
+                                    const time=new Date().getTime()
+                                    //时间戳转化
+                                    const newtime=this.timeformat(time)
+                                    item.id=newtime
+                                }else{
+                                    //如果此时todo变更为未完成状态，则显示时间为建立时的时间
+                                    item.id=item.oldtime
+                                }
                             }
-                            console.log(item.status)
                             return item
                         })
+
                         return {
                             todo: newTodo
                         }
@@ -100,51 +117,65 @@ class App extends Component {
                     })
                 },
                 //6.拖拽
-                dragstart:(index)=>{
-                    console.log('dragstart运行')
+                //被拖拽开始时
+                dragstart:(item)=>{
                     //储存被点击节点的index值
-                    this.dragIndex = index;
-                    console.log('被点击的节点的index值：'+this.dragIndex)
+                    this.dragIndex = item.dragnumb;
+                    console.log('被点击的todo：'+item.text)
                 },
-                dragenter:(e,index)=>{
+                //停止拖拽时
+                dragenter:(e,item)=>{
                     e.preventDefault();
                     console.log('dragenter运行')
                     this.setState(preState=>{
-                        if (this.dragIndex !== index) {
+                        if (this.dragIndex !== item.dragnumb) {
                             //创建todo数据的副本
                             let newTodo = preState.todo
                             //储存被点击的节点的对象数据
                             const source=newTodo.list[this.dragIndex];
                             // 避免重复触发目标对象的dragenter事件
-                            if (this.enterIndex !== index) {
+                            if (this.enterIndex !== item.dragnumb) {
+                                //如果落下时的todo和被拖拽的todo的status不一样，则将被点击的状态值取反
+                                if(item.status !== source.status){
+                                    source.status=!source.status
+                                }
+                                //删除原位置的节点
                                 newTodo.list.splice(this.dragIndex, 1);
-                                newTodo.list.splice(index, 0,source);
+                                //截取指定位置添加值
+                                newTodo.list.splice(item.dragnumb, 0,source);
                                 // 排序变化后目标对象的索引变成源对象的索引
-                                this.dragIndex = index;
-                                console.log(source)
+                                console.log('鼠标落下时的todo：'+item.text)
+                                this.dragIndex = item.dragnumb;
                                 return{
                                     todo:newTodo
                                 }
                             } else {
-                                this.enterIndex = index;
+                                this.enterIndex = item.dragnumb;
                             }
                         }
                     })
 
                 },
+                //拖拽过程中
                 dragover:(e,index)=>{
                     e.preventDefault();
+                    console.log('我还在被你拽着呢')
                 }
             }
         }
     }
-
+    //7.时间戳转化为正常时间（毫秒）
+    timeformat(time){
+        //安装moment：import moment from 'moment';
+        //解释：parseInt()把括号里面的内容转化成int类型，moment（）把括号中的内容转成时间，format（）就是把时间转化成括号里面的那种格式
+        return moment(parseInt(time)).format("YYYY-MM-DD HH:mm:ss");
+    }
     render(){
         return(
             <div className='App'>
                 {/*  父-子传参：使用todo对象把父组件的数据和方法传入子组件*/}
                 <Header todo={this.state.todo}  />
-                <Content todo={this.state.todo} />
+                <Content todo={this.state.todo} timeformat={this.timeformat} />
                 <Footer todo={this.state.todo}/>
             </div>
         )
