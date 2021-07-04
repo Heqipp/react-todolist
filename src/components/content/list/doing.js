@@ -15,6 +15,10 @@ class Doing extends Component {
                         return (
                             //拖拽事件
                             <div className='doing-list'
+                                 //判断地显示背景颜色：已经过了截止日期的显示红色背景：(判断式)？‘true时’:'false时'
+                                 style={{
+                                     background:(item.over===true)?'red':'#629A9C'
+                                 }}
                                  draggable="true"
                                  onDragEnter={(e)=>this.props.todo.dragenter(e,item)}
                                  onDragOver={(e)=>this.props.todo.dragover(e,item)}

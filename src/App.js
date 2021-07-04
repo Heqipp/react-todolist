@@ -27,16 +27,20 @@ class App extends Component {
                         const time=new Date().getTime()
                         //将时间戳转化为正常时间：调用转化函数
                         const id=this.timeformat(time)
+                        //设置截止日期：输入字符串--转化为字符串
+                        const overtime=window.prompt('请输入截止日期')
+                        //将输入的日期转化为时间戳
+                        const overtime2=this.timeredution(overtime)
                         //为list列表添加新值
                         list.push({
                             text: item,
                             id: id,//当更新状态时，会改变此时间显示为完成时时间
                             oldtime:id,//建立时的时间：用来状态变为false时，显示建立时的时间
-                            status: false,
-                            dragnumb:this.state.todo.list.length
+                            status: false,//区分正在进行和已经完成
+                            dragnumb:this.state.todo.list.length,//被拖拽索引
+                            overtime2:overtime2,//截止日期：时间戳
+                            over:false//过期状态值
                         })
-                        //查验新list
-                        console.log(list)
                         //将改变后的list赋值给新列表
                         newTodo.list = list
                         return {
@@ -62,6 +66,8 @@ class App extends Component {
                         newTodo.list = newTodo.list.map(item => {
                             if(item.id === id){
                                 item.status = !item.status
+                                //将截止日期的状态值设置为false
+                                item.over=false
                                 //如果此时todo为完成状态，则更新完成时间
                                 if(item.status===true){
                                     //获取当前时间为完成时的时间戳
@@ -170,6 +176,13 @@ class App extends Component {
         //解释：parseInt()把括号里面的内容转化成int类型，moment（）把括号中的内容转成时间，format（）就是把时间转化成括号里面的那种格式
         return moment(parseInt(time)).format("YYYY-MM-DD HH:mm:ss");
     }
+    //8.时间转化为时间戳
+    timeredution(time){
+        let zTimeBegin = new Date(time)
+        const timeold = zTimeBegin.getTime()
+        console.log('我已将其转化为时间戳'+timeold)
+        return timeold
+    }
     render(){
         return(
             <div className='App'>
@@ -179,6 +192,35 @@ class App extends Component {
                 <Footer todo={this.state.todo}/>
             </div>
         )
+    }
+    //截止日期对比：提醒todo过期
+    tick(list){
+        //输入截止日期后--转化为时间戳--储存截止时间戳到对象中--获取状态为false的所有todo对象--map将截止时间戳和当前时间比较，大于当前时间的则存入新数组中，最后后台提醒这些todo已经过期
+        //获取当前时间戳
+        const currenttime=new Date().getTime()
+        //console.log('当前时间戳：'+currenttime)
+        //遍历一遍list，将状态为fslse的取出来，之后再遍历这个结果数组，将小于当前时间项拿出来，储存到变量中
+        const overtimelist=list.filter(item=>{
+            // console.log('已将其滤过=false')
+            return item.status===false
+        }).filter(item=>{
+            // console.log('正在比较'+item.overtime2+'='+currenttime)
+            return currenttime> item.overtime2
+        }).map(item=>{ //将已经过期的状态值over设置为true
+            this.setState(preState=>{
+                item.over=true
+                //创建todo数据的副本
+                let newTodo = preState.todo
+                return{
+                    todo:newTodo
+                }
+            })
+        })
+        // console.log('下列todo已经过期，请注意')
+        // console.log(overtimelist)
+        //Web Notification消息通知的使用：浏览器API
+            Notification.requestPermission(function (permission) {new Notification('下列todo过期',{body:overtimelist})})
+
     }
     //1.获取本地数据：生命周期函数：在组件加载完成，render() 之后调用
     componentDidMount(){
@@ -196,6 +238,9 @@ class App extends Component {
                 todo: newTodo
             }
         })
+        //调用计时器函数：定时器内部调用对比时间的方法:不断自检截止日期是否到期
+        // setInterval(()=>this.tick(this.state.todo.list),5000);
+        this.tick(this.state.todo.list)
     }
 
     //2.储存：添加数据后会将其储存到本地
