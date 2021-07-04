@@ -34,7 +34,7 @@ class Doing extends Component {
                                 <span className='time'>{item.id}</span>
                                 {/*编辑：调用父组件函数，并传入此todo的三个属性值：index、id、status*/}
                                 <span className='edit' onClick={() => {
-                                    this.props.todo.edit(index, item.id, item.status)
+                                    this.props.todo.edit(index, item.id, item.status,item.over,item.oldtime,item.overtime2,item.dragnumb)
                                 }}>编辑</span>
                                 <span className='delete' onClick={() => {
                                     this.props.todo.delete(item.id)

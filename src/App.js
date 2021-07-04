@@ -39,7 +39,7 @@ class App extends Component {
                             status: false,//区分正在进行和已经完成
                             dragnumb:this.state.todo.list.length,//被拖拽索引
                             overtime2:overtime2,//截止日期：时间戳
-                            over:false//过期状态值
+                            over:false//过期状态值:false表示未过期
                         })
                         //将改变后的list赋值给新列表
                         newTodo.list = list
@@ -66,8 +66,9 @@ class App extends Component {
                         newTodo.list = newTodo.list.map(item => {
                             if(item.id === id){
                                 item.status = !item.status
-                                //将截止日期的状态值设置为false
-                                item.over=false
+                                //将截止日期的状态值设置为取反
+                                item.over=!item.over
+                                console.log(item.over)
                                 //如果此时todo为完成状态，则更新完成时间
                                 if(item.status===true){
                                     //获取当前时间为完成时的时间戳
@@ -100,7 +101,7 @@ class App extends Component {
                     })
                 },
                 //5.编辑todo
-                edit:(index,id,status)=>{
+                edit:(index,id,status,over,oldtime,overtime2,dragnumb)=>{
                     //console.log(index)//检验索引值
                     //console.log(this.state.todo.list)
                     //调用 setState 其实是异步的，不要指望在调用 setState 之后，this.state 会立即映射为新的值。如果你需要基于当前的 state 来计算出新的值，那你应该传递一个函数，而不是一个对象
@@ -110,8 +111,8 @@ class App extends Component {
                        if(val){
                            //创建todo数据的副本
                            let newTodo = preState.todo
-                           //使用splice进行数组的对象数据替换，将list数组中对应索引号index的对象的三个属性进行替换
-                           newTodo.list.splice(index,1,{'text':val,'id':id,'status':status})
+                           //使用splice进行数组的对象数据替换，将list数组中对应索引号index的对象的所有属性进行替换
+                           newTodo.list.splice(index,1,{'text':val,'id':id,'status':status,'over':over,'oldtime':oldtime,'overtime2':overtime2,'dragnumb':dragnumb})
                            return {
                                todo: newTodo
                            }
@@ -219,7 +220,10 @@ class App extends Component {
         // console.log('下列todo已经过期，请注意')
         // console.log(overtimelist)
         //Web Notification消息通知的使用：浏览器API
+        if(overtimelist!==false||overtimelist!==null||overtimelist.length!==0){//如果没有过期的todo，则不触发消息弹框
             Notification.requestPermission(function (permission) {new Notification('下列todo过期',{body:overtimelist})})
+        }
+
 
     }
     //1.获取本地数据：生命周期函数：在组件加载完成，render() 之后调用
@@ -239,8 +243,9 @@ class App extends Component {
             }
         })
         //调用计时器函数：定时器内部调用对比时间的方法:不断自检截止日期是否到期
-        // setInterval(()=>this.tick(this.state.todo.list),5000);
-        this.tick(this.state.todo.list)
+        //如果不是定时器频繁触发，那么就不会显示过期todo的红色背景，因为触发次数太少
+        setInterval(()=>this.tick(this.state.todo.list),5000);
+        // this.tick(this.state.todo.list)
     }
 
     //2.储存：添加数据后会将其储存到本地

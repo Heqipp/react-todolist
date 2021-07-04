@@ -23,7 +23,7 @@ class Doing extends Component {
                                     <li key={index}>{item.text}</li>
                                     {/*时间显示*/}
                                     <span className='time'>{item.id}</span>
-                                    <span className='edit' onClick={()=>{this.props.todo.edit(index,item.id,item.status)}}>编辑</span>
+                                    <span className='edit' onClick={()=>{this.props.todo.edit(index, item.id, item.status,item.over,item.oldtime,item.overtime2,item.dragnumb)}}>编辑</span>
                                     <span className='delete' onClick={() => {
                                         this.props.todo.delete(item.id)
                                     }}>删除</span>
