@@ -28,9 +28,7 @@ class App extends Component {
                         //将时间戳转化为正常时间：调用转化函数
                         const id=this.timeformat(time)
                         //设置截止日期：输入字符串--转化为字符串
-                        const overtime=window.prompt('请输入截止日期')
-                        //将输入的日期转化为时间戳
-                        const overtime2=this.timeredution(overtime)
+                        const overtime=window.prompt('请输入截止日期:格式：2021-07-04 10:45:00')
                         //为list列表添加新值
                         list.push({
                             text: item,
@@ -38,7 +36,7 @@ class App extends Component {
                             oldtime:id,//建立时的时间：用来状态变为false时，显示建立时的时间
                             status: false,//区分正在进行和已经完成
                             dragnumb:this.state.todo.list.length,//被拖拽索引
-                            overtime2:overtime2,//截止日期：时间戳
+                            overtime:overtime,//截止日期：时间
                             over:false//过期状态值:false表示未过期
                         })
                         //将改变后的list赋值给新列表
@@ -101,7 +99,7 @@ class App extends Component {
                     })
                 },
                 //5.编辑todo
-                edit:(index,id,status,over,oldtime,overtime2,dragnumb)=>{
+                edit:(index,id,status,over,oldtime,overtime,dragnumb)=>{
                     //console.log(index)//检验索引值
                     //console.log(this.state.todo.list)
                     //调用 setState 其实是异步的，不要指望在调用 setState 之后，this.state 会立即映射为新的值。如果你需要基于当前的 state 来计算出新的值，那你应该传递一个函数，而不是一个对象
@@ -112,7 +110,7 @@ class App extends Component {
                            //创建todo数据的副本
                            let newTodo = preState.todo
                            //使用splice进行数组的对象数据替换，将list数组中对应索引号index的对象的所有属性进行替换
-                           newTodo.list.splice(index,1,{'text':val,'id':id,'status':status,'over':over,'oldtime':oldtime,'overtime2':overtime2,'dragnumb':dragnumb})
+                           newTodo.list.splice(index,1,{'text':val,'id':id,'status':status,'over':over,'oldtime':oldtime,'overtime':overtime,'dragnumb':dragnumb})
                            return {
                                todo: newTodo
                            }
@@ -132,15 +130,20 @@ class App extends Component {
                 },
                 //停止拖拽时
                 dragenter:(e,item)=>{
-                    e.preventDefault();
+                    e.preventDefault();//阻止浏览器默认行为
                     console.log('dragenter运行')
                     this.setState(preState=>{
+                        //确认被拖拽元素和放置元素不一样
                         if (this.dragIndex !== item.dragnumb) {
                             //创建todo数据的副本
                             let newTodo = preState.todo
                             //储存被点击的节点的对象数据
                             const source=newTodo.list[this.dragIndex];
-                            // 避免重复触发目标对象的dragenter事件
+                            console.log(item)
+                            if(item===''||item===false||item.length===0||item==={}||item===[]){
+                                source.status=!source.status
+                            }
+                            // 避免重复触发目标对象的dragenter事件：防止在空白处触发拖拽事件
                             if (this.enterIndex !== item.dragnumb) {
                                 //如果落下时的todo和被拖拽的todo的status不一样，则将被点击的状态值取反
                                 if(item.status !== source.status){
@@ -181,7 +184,7 @@ class App extends Component {
     timeredution(time){
         let zTimeBegin = new Date(time)
         const timeold = zTimeBegin.getTime()
-        console.log('我已将其转化为时间戳'+timeold)
+        // console.log('我已将其转化为时间戳'+timeold)
         return timeold
     }
     render(){
@@ -205,8 +208,9 @@ class App extends Component {
             // console.log('已将其滤过=false')
             return item.status===false
         }).filter(item=>{
-            // console.log('正在比较'+item.overtime2+'='+currenttime)
-            return currenttime> item.overtime2
+            //将输入的日期转化为时间戳
+            const overtime2=this.timeredution(item.overtime)
+            return currenttime> overtime2
         }).map(item=>{ //将已经过期的状态值over设置为true
             this.setState(preState=>{
                 item.over=true

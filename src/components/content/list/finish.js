@@ -21,9 +21,9 @@ class Doing extends Component {
                                     <input type='checkbox' className='check'
                                            onClick={() => this.props.todo.finish(item.id)} checked={item.status}/>
                                     <li key={index}>{item.text}</li>
-                                    {/*时间显示*/}
-                                    <span className='time'>{item.id}</span>
-                                    <span className='edit' onClick={()=>{this.props.todo.edit(index, item.id, item.status,item.over,item.oldtime,item.overtime2,item.dragnumb)}}>编辑</span>
+                                    {/*完成时间显示*/}
+                                    <span className='time'>{'完成时间：'+item.id}</span>
+                                    <span className='edit' onClick={()=>{this.props.todo.edit(index, item.id, item.status,item.over,item.oldtime,item.overtime,item.dragnumb)}}>编辑</span>
                                     <span className='delete' onClick={() => {
                                         this.props.todo.delete(item.id)
                                     }}>删除</span>

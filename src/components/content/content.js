@@ -18,7 +18,7 @@ class Content extends Component {
                         }).length}</span>
                     </div>
                     {/*调用子组件：进行中list*/}
-                    <Doing todo={this.props.todo}/>
+                    <Doing todo={this.props.todo} timeformat={this.props.timeformat}/>
                     <div className='finish'>已经完成
                         <span className="finish-numb">{this.props.todo.list.filter(item => {
                             return item.status === true
